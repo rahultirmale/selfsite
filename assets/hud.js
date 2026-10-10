@@ -263,7 +263,7 @@
     { org: 'JSW One Platforms', role: 'Senior Product Manager · Salesforce Web + Mobile', when: '2022 – 2024', cap: 'Marketplace at $1B',
       text: 'Built a B2B commerce platform for 30K+ MSMEs from scratch, owned its $1B GMV enablement, and set up a 9-member engineering and design team.' },
     { org: 'Vodafone Idea', role: 'GM – Product Manager · Vi App', when: '2024 – Present', cap: 'AI at 30M-user scale',
-      text: 'Lead the AI and prepaid portfolio with a 40-member team owning 70% of app revenue. Launched telecom\'s first LLM recharge agent (60K+ recharges a month) and won the Best Use of AI award.' },
+      text: 'Lead the AI and prepaid portfolio with a 40-member team owning 70% of app revenue. Launched telecom\'s first LLM recharge agent (50K+ recharges a month) and won the Best Use of AI award.' },
   ];
   function showSuit(i) {
     const s = suits[i];
@@ -286,7 +286,7 @@
   }));
   const plays = {
     revenue: [
-      ['Conversational commerce', 'An agent that understands intent and completes the purchase in chat, the same pattern behind 60K+ monthly recharges at Vi.'],
+      ['Conversational commerce', 'An agent that understands intent and completes the purchase in chat, the same pattern behind 50K+ monthly recharges at Vi.'],
       ['Next-best-offer engine', 'LLM-ranked offers built from usage signals, personalised per user and tested against your control group.'],
       ['Churn-save agent', 'Spots at-risk users early and gives them a tailored offer before they leave.'],
     ],
