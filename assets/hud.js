@@ -347,7 +347,7 @@
       : `<a class="${p.status}" href="${esc(p.url)}" target="_blank" rel="noopener">${inner}</a>`;
   }).join('');
   const n = s => projects.filter(p => p.status === s).length;
-  $('#labCount').textContent = `${n('live')} live · ${n('proto')} prototypes · ${n('soon')} launching soon`;
+  $('#labCount').textContent = [[n('live'), 'live'], [n('proto'), 'prototypes'], [n('soon'), 'launching soon']].filter(x => x[0]).map(x => x.join(' ')).join(' · ');
 
   /* ================= GUITAR ================= */
   // Strings listed high → low (tab order). Open-string frequencies in Hz.
