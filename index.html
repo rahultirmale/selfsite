@@ -1,0 +1,409 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Rahul Tirmale — Product Leader</title>
+<meta name="description" content="Rahul Tirmale: product leader (30M+ users, $1B GMV), AI product consultant, author of The Agentic Product Playbook, guitarist.">
+<meta property="og:title" content="Rahul Tirmale — Product Leader">
+<meta property="og:description" content="Product leader. AI product consultant. Author. Guitarist. Step into Rahul OS.">
+<meta property="og:image" content="assets/stage.webp">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@400;500;600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/hud.css">
+</head>
+<body>
+
+<canvas id="field" aria-hidden="true"></canvas>
+<div class="grid-overlay" aria-hidden="true"></div>
+<div class="scanline" aria-hidden="true"></div>
+
+<!-- ============ BOOT ============ -->
+<div id="boot" role="status" aria-live="polite">
+  <div class="boot-inner">
+    <svg class="boot-reactor" viewBox="0 0 200 200" aria-hidden="true">
+      <circle class="br r1" cx="100" cy="100" r="90"/>
+      <circle class="br r2" cx="100" cy="100" r="70"/>
+      <circle class="br r3" cx="100" cy="100" r="50"/>
+      <circle class="br-core" cx="100" cy="100" r="22"/>
+    </svg>
+    <div class="boot-lines" id="bootLines"></div>
+    <div class="boot-bar"><span id="bootBar"></span></div>
+  </div>
+  <button class="boot-skip" id="bootSkip">Skip intro ⏎</button>
+</div>
+
+<!-- ============ TOP HUD ============ -->
+<header class="hud-top">
+  <a class="logo" href="#" data-home>
+    <span class="logo-mark"></span>
+    <span>RAHUL<b>.OS</b></span>
+  </a>
+  <div class="hud-status" id="hudStatus"><span class="pulse"></span>ALL SYSTEMS NOMINAL</div>
+  <div class="hud-actions">
+    <button class="icon-btn" id="cmdBtn" title="Command bar (/)"><kbd>/</kbd><span class="hide-sm">Command</span></button>
+    <button class="icon-btn" id="soundBtn" aria-pressed="false" title="Interface sounds">
+      <span class="snd-off">🔇</span><span class="snd-on">🔊</span>
+    </button>
+    <a class="recruiter-btn" href="recruiter.html">
+      <span class="rb-dot"></span>Recruiter mode
+    </a>
+  </div>
+</header>
+
+<!-- ============ HUB ============ -->
+<main id="hub" aria-label="Rahul OS main hub">
+  <div class="hub-stage" id="hubStage">
+    <svg class="links" id="links" aria-hidden="true"></svg>
+
+    <div class="core-wrap">
+      <button class="core" id="core" aria-label="About Rahul">
+        <svg viewBox="0 0 300 300" aria-hidden="true">
+          <defs>
+            <radialGradient id="coreGlow">
+              <stop offset="0%" stop-color="#fff"/>
+              <stop offset="35%" stop-color="var(--c1)"/>
+              <stop offset="100%" stop-color="transparent"/>
+            </radialGradient>
+          </defs>
+          <circle class="ring ring-a" cx="150" cy="150" r="140"/>
+          <circle class="ring ring-b" cx="150" cy="150" r="118"/>
+          <circle class="ring ring-c" cx="150" cy="150" r="96"/>
+          <g class="ring-ticks"></g>
+          <polygon class="tri" points="150,92 200,178 100,178"/>
+          <circle cx="150" cy="150" r="46" fill="url(#coreGlow)" class="core-glow"/>
+        </svg>
+      </button>
+      <div class="core-id">
+        <div class="id-name">RAHUL TIRMALE</div>
+        <div class="id-role">Product leader · I build what moves millions</div>
+      </div>
+    </div>
+
+    <button class="node" data-module="product" style="--a:-90deg">
+      <span class="node-ring"></span>
+      <span class="node-code">MK-I</span>
+      <span class="node-title">Product Leader</span>
+      <span class="node-peek">30M+ users · $1B GMV · 10+ yrs</span>
+    </button>
+    <button class="node" data-module="consulting" style="--a:-18deg">
+      <span class="node-ring"></span>
+      <span class="node-code">MK-II</span>
+      <span class="node-title">AI Consulting</span>
+      <span class="node-peek">Run a free AI opportunity scan</span>
+    </button>
+    <button class="node" data-module="music" style="--a:54deg">
+      <span class="node-ring"></span>
+      <span class="node-code">MK-III</span>
+      <span class="node-title">Musician</span>
+      <span class="node-peek">Play the guitar yourself 🎸</span>
+    </button>
+    <button class="node" data-module="peace" style="--a:126deg">
+      <span class="node-ring"></span>
+      <span class="node-code">MK-IV</span>
+      <span class="node-title">Peace</span>
+      <span class="node-peek">Power down the suit</span>
+    </button>
+    <button class="node" data-module="author" style="--a:198deg">
+      <span class="node-ring"></span>
+      <span class="node-code">MK-V</span>
+      <span class="node-title">Author</span>
+      <span class="node-peek">The Agentic Product Playbook</span>
+    </button>
+  </div>
+
+  <aside class="telemetry tl-left" aria-hidden="true">
+    <div><span>LOC</span>MUMBAI · IN</div>
+    <div><span>TIME</span><b id="clock">--:--</b> IST</div>
+    <div><span>STATUS</span>OPEN TO HEAD / DIRECTOR OF PRODUCT</div>
+  </aside>
+  <aside class="telemetry tl-right" aria-hidden="true">
+    <div><span>USERS SERVED</span>30,000,000+</div>
+    <div><span>GMV ENABLED</span>$1,000,000,000</div>
+    <div><span>AI RECHARGES / MO</span><b id="liveCount">60,000+</b></div>
+  </aside>
+
+  <p class="hub-hint">Select a module · press <kbd>/</kbd> for commands</p>
+</main>
+
+<!-- ============ PANELS ============ -->
+
+<!-- MK-I PRODUCT -->
+<section class="panel" id="panel-product" role="dialog" aria-modal="true" aria-labelledby="h-product" hidden>
+  <div class="panel-frame">
+    <header class="panel-head">
+      <div><span class="p-code">MK-I</span><h2 id="h-product">Product Leader</h2></div>
+      <button class="close" data-close aria-label="Close">ESC ✕</button>
+    </header>
+    <div class="panel-body">
+      <p class="p-lede">GM – Product at Vodafone Idea. I lead the AI and prepaid portfolio of the Vi app with a 40-member team that owns 70% of app revenue. Over 10+ years I've worked across telecom, B2B commerce, airlines, SaaS and IoT.</p>
+
+      <div class="readouts">
+        <div class="readout"><b data-count="30" data-suffix="M+">0</b><span>active users on the Vi app</span></div>
+        <div class="readout"><b data-count="1" data-prefix="$" data-suffix="B">0</b><span>GMV enablement owned at JSW One</span></div>
+        <div class="readout"><b data-count="60" data-suffix="K+">0</b><span>recharges / month via LLM agent</span></div>
+        <div class="readout"><b data-count="27" data-prefix="+" data-suffix="%">0</b><span>transaction growth on Vi app</span></div>
+      </div>
+
+      <h3 class="sub">Mission logs</h3>
+      <div class="missions">
+        <div class="mission-tabs" role="tablist">
+          <button role="tab" aria-selected="true" data-m="0">LLM recharge agent</button>
+          <button role="tab" aria-selected="false" data-m="1">Gamification</button>
+          <button role="tab" aria-selected="false" data-m="2">JSW One · $1B</button>
+          <button role="tab" aria-selected="false" data-m="3">Airline digital</button>
+        </div>
+        <div class="mission" data-m="0">
+          <div class="m-stat"><b>60K+</b><span>recharges / month</span></div>
+          <dl>
+            <dt>Objective</dt><dd>Help users pick and pay for the right plan without fighting menus.</dd>
+            <dt>Action</dt><dd>Launched telecom's first LLM-powered recharge agent, then built agentic payments with Razorpay as strategic partner, so users can complete the payment inside the conversation.</dd>
+            <dt>Result</dt><dd>60K+ recharges every month. Showcased at Global Fintech Fest.</dd>
+          </dl>
+        </div>
+        <div class="mission" data-m="1" hidden>
+          <div class="m-stat"><b>+2–5M</b><span>MAU per program</span></div>
+          <dl>
+            <dt>Objective</dt><dd>Turn a once-a-month utility app into a habit.</dd>
+            <dt>Action</dt><dd>Started 4 major gamification programs, kept shipping feature improvements, and optimised the experience end to end.</dd>
+            <dt>Result</dt><dd>Each program added 2–5M MAU. App revenue share rose from 4.7% to 6%, transactions grew 27%, and the store rating went from 4.2 to 4.4.</dd>
+          </dl>
+        </div>
+        <div class="mission" data-m="2" hidden>
+          <div class="m-stat"><b>$1B</b><span>GMV enabled</span></div>
+          <dl>
+            <dt>Objective</dt><dd>Bring the MSME construction-materials supply chain online.</dd>
+            <dt>Action</dt><dd>Built a B2B commerce platform for 30K+ MSMEs from scratch and set up a 9-member engineering and design team. Shipped credit workflows, omnichannel support and a distributor portal for 10K retailers.</dd>
+            <dt>Result</dt><dd>$1B GMV. Credit workflows drove 15% month-over-month revenue growth; response time fell 80% and retention rose 25%.</dd>
+          </dl>
+        </div>
+        <div class="mission" data-m="3" hidden>
+          <div class="m-stat"><b>+11%</b><span>daily active users</span></div>
+          <dl>
+            <dt>Objective</dt><dd>Modernise digital and loyalty for Malaysia Airlines and Qatar Airways.</dd>
+            <dt>Action</dt><dd>Set the B2C web and app strategy, led the loyalty transformation, and built airport integrations for real-time alerts.</dd>
+            <dt>Result</dt><dd>An 11% DAU lift after the Android and iOS overhaul.</dd>
+          </dl>
+        </div>
+      </div>
+
+      <h3 class="sub">Armor evolution <small>Career, one upgrade at a time</small></h3>
+      <div class="armor" id="armor">
+        <button class="suit" data-s="0"><i>MK I</i><b>John Deere</b><span>2014</span></button>
+        <button class="suit" data-s="1"><i>MK II</i><b>Wipro</b><span>2017</span></button>
+        <button class="suit" data-s="2"><i>MK III</i><b>Accenture</b><span>2018</span></button>
+        <button class="suit" data-s="3"><i>MK IV</i><b>JSW One</b><span>2022</span></button>
+        <button class="suit active" data-s="4"><i>MK V</i><b>Vodafone Idea</b><span>2024 →</span></button>
+      </div>
+      <div class="suit-detail" id="suitDetail"></div>
+
+      <div class="awards">
+        <span>Best Use of AI award</span><span>Global Fintech Fest showcase</span>
+        <span>2× Dream Team</span><span>2× National CXX Hero</span><span>Innovation Catalyst</span>
+      </div>
+      <p class="edu">PGDM, IIM Kozhikode · B.Tech Electronics, Walchand College of Engineering · CSM · SAFe · Six Sigma GB · Salesforce Admin</p>
+      <div class="p-cta">
+        <a class="btn gold" href="resume.pdf" download>Download résumé</a>
+        <a class="btn" href="mailto:rahultirmale@gmail.com?subject=Opportunity%20for%20Rahul">Email Rahul</a>
+        <a class="btn" href="https://www.linkedin.com/in/rahultirmale" target="_blank" rel="noopener">LinkedIn ↗</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- MK-II CONSULTING -->
+<section class="panel" id="panel-consulting" role="dialog" aria-modal="true" aria-labelledby="h-consulting" hidden>
+  <div class="panel-frame">
+    <header class="panel-head">
+      <div><span class="p-code">MK-II</span><h2 id="h-consulting">AI Product Consulting</h2></div>
+      <button class="close" data-close aria-label="Close">ESC ✕</button>
+    </header>
+    <div class="panel-body">
+      <p class="p-lede">I help companies find the AI use cases that actually pay off, and ship them. I've done it at 30M-user scale (telecom's first LLM recharge agent) and end to end on my own products.</p>
+
+      <div class="scan" id="scan">
+        <div class="scan-step" data-step="1">
+          <h3 class="sub">01 · Your industry</h3>
+          <div class="opts" data-key="industry">
+            <button>Telecom</button><button>E-commerce / D2C</button><button>Fintech</button>
+            <button>SaaS</button><button>Travel</button><button>Other</button>
+          </div>
+        </div>
+        <div class="scan-step" data-step="2">
+          <h3 class="sub">02 · Your top goal</h3>
+          <div class="opts" data-key="goal">
+            <button data-g="revenue">Grow revenue</button>
+            <button data-g="support">Cut support cost</button>
+            <button data-g="engage">Lift engagement</button>
+            <button data-g="ship">Ship an AI product fast</button>
+          </div>
+        </div>
+        <button class="btn gold scan-run" id="scanRun" disabled>Run diagnostic scan ▸</button>
+        <div class="scan-console" id="scanConsole" hidden></div>
+        <div class="scan-result" id="scanResult" hidden></div>
+      </div>
+
+      <h3 class="sub">How we can work together</h3>
+      <div class="offer">
+        <div><b>AI product strategy sprint</b><p>Two to three weeks to map use cases, size the value, and leave you with a build-vs-buy-vs-rent call and a roadmap.</p></div>
+        <div><b>Agent &amp; LLM build advisory</b><p>Hands-on guidance from prototype to production, covering guardrails, payments and evals.</p></div>
+        <div><b>PM team upskilling</b><p>Workshops on taking agentic products from idea to launch, based on <i>The Agentic Product Playbook</i>.</p></div>
+      </div>
+
+      <h3 class="sub" id="lab">Builder's lab <small id="labCount">Products I've built and shipped myself</small></h3>
+      <div class="systems" id="systems"></div>
+
+      <div class="p-cta">
+        <a class="btn gold" id="consultMail" href="mailto:rahultirmale@gmail.com?subject=AI%20product%20consulting">Start a conversation → rahultirmale@gmail.com</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- MK-III MUSIC -->
+<section class="panel" id="panel-music" role="dialog" aria-modal="true" aria-labelledby="h-music" hidden>
+  <div class="panel-frame">
+    <header class="panel-head">
+      <div><span class="p-code">MK-III</span><h2 id="h-music">Musician</h2></div>
+      <button class="close" data-close aria-label="Close">ESC ✕</button>
+    </header>
+    <div class="panel-body">
+      <p class="p-lede">Before product, there was the guitar. I play lead and still get on stage. Try it yourself: <b>drag across the strings</b>, or use keys <kbd>1</kbd>–<kbd>6</kbd>.</p>
+
+      <div class="guitar-wrap">
+        <div class="chords" id="chords">
+          <button data-chord="open" class="on">Open</button>
+          <button data-chord="Em">Em</button>
+          <button data-chord="G">G</button>
+          <button data-chord="C">C</button>
+          <button data-chord="D">D</button>
+          <button data-chord="Am">Am</button>
+          <button class="strum" id="strumBtn">Strum ⇣</button>
+        </div>
+        <div class="fretboard" id="fretboard" aria-label="Playable guitar strings">
+          <div class="frets" aria-hidden="true"></div>
+        </div>
+        <canvas class="scope" id="scope" aria-hidden="true"></canvas>
+      </div>
+
+      <div class="stage">
+        <figure class="stage-photo">
+          <img src="assets/stage.webp" alt="Rahul playing a Stratocaster on stage in front of a Marshall stack" loading="lazy">
+          <figcaption>LIVE · on stage with a Marshall stack</figcaption>
+        </figure>
+        <div class="video" id="video">
+          <button class="video-poster" id="videoPlay" aria-label="Play Hotel California guitar solo cover">
+            <img src="https://i.ytimg.com/vi/c7MWCOf640A/hqdefault.jpg" alt="" loading="lazy">
+            <span class="play">▶</span>
+            <span class="v-cap">Hotel California solo · cover</span>
+          </button>
+        </div>
+      </div>
+      <p class="note">What music taught me about product: rhythm beats intensity, practice compounds, and the best solos leave space.</p>
+    </div>
+  </div>
+</section>
+
+<!-- MK-IV PEACE -->
+<section class="panel peace-panel" id="panel-peace" role="dialog" aria-modal="true" aria-labelledby="h-peace" hidden>
+  <div class="panel-frame">
+    <header class="panel-head">
+      <div><span class="p-code">MK-IV</span><h2 id="h-peace">Peace</h2></div>
+      <button class="close" data-close aria-label="Close">ESC ✕</button>
+    </header>
+    <div class="panel-body center">
+      <p class="p-lede">The suit runs hot, but the person inside doesn't have to. Calm is a leadership skill, and it's how I make good calls under pressure.</p>
+      <div class="breath" id="breath">
+        <div class="breath-circle"><span id="breathText">Ready</span></div>
+      </div>
+      <div class="p-cta center">
+        <button class="btn gold" id="breathBtn">Take three breaths with me</button>
+        <button class="btn" id="powerBtn">Power down the suit</button>
+      </div>
+      <div class="values">
+        <div><b>Steady over loud</b><span>Calm teams ship better decisions.</span></div>
+        <div><b>Space to think</b><span>Good ideas need quiet, like good music.</span></div>
+        <div><b>Kindness scales</b><span>The best products respect people's time and attention.</span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- MK-V AUTHOR -->
+<section class="panel" id="panel-author" role="dialog" aria-modal="true" aria-labelledby="h-author" hidden>
+  <div class="panel-frame">
+    <header class="panel-head">
+      <div><span class="p-code">MK-V</span><h2 id="h-author">Author</h2></div>
+      <button class="close" data-close aria-label="Close">ESC ✕</button>
+    </header>
+    <div class="panel-body">
+      <div class="book-row">
+        <div class="book-3d" id="book3d" title="Drag to rotate">
+          <div class="book">
+            <div class="b-front">
+              <small>A playbook for product leaders</small>
+              <strong>The Agentic Product Playbook</strong>
+              <span>RAHUL TIRMALE</span>
+            </div>
+            <div class="b-spine">THE AGENTIC PRODUCT PLAYBOOK</div>
+            <div class="b-back"><p>Patterns and plays for executing products where software acts on the user's behalf.</p></div>
+          </div>
+        </div>
+        <div>
+          <p class="p-lede">My book on building agentic products: how to choose problems worth automating, design for trust, and execute when software starts acting for your users.</p>
+          <div class="p-cta">
+            <a class="btn gold" href="https://www.amazon.in/Agentic-Product-Playbook-Patterns-Executing-ebook/dp/B0GF3J6PNX" target="_blank" rel="noopener">Get it on Amazon ↗</a>
+          </div>
+          <p class="note">Drag the book to rotate it.</p>
+        </div>
+      </div>
+
+      <h3 class="sub">Transmissions <small>Recent writing</small></h3>
+      <div class="posts">
+        <article><i>BUILD vs BUY vs RENT</i><b>Closed APIs are perfect for MVPs and terrible for scale</b><p>Why I hosted an open-weight LLM, and what it taught me about AI unit economics.</p></article>
+        <article><i>LEARNING BY SHIPPING</i><b>4 micro-SaaS launches taught me more than any AI course</b><p>Payments, auth and integrations: the blockers are where you learn.</p></article>
+        <article><i>AI FOR PMs</i><b>Agents that save hours of PM busywork</b><p>Telegram + n8n + RAG agents for backlogs, documents and status emails.</p></article>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ABOUT (core click) -->
+<section class="panel" id="panel-about" role="dialog" aria-modal="true" aria-labelledby="h-about" hidden>
+  <div class="panel-frame narrow">
+    <header class="panel-head">
+      <div><span class="p-code">CORE</span><h2 id="h-about">Rahul Tirmale</h2></div>
+      <button class="close" data-close aria-label="Close">ESC ✕</button>
+    </header>
+    <div class="panel-body">
+      <p class="p-lede">Product leader, AI product consultant, author and guitarist. I've spent 10+ years building products that serve millions, and I keep my hands on the tools by shipping my own.</p>
+      <div class="about-grid">
+        <button data-go="product"><i>MK-I</i>Product Leader</button>
+        <button data-go="consulting"><i>MK-II</i>AI Consulting</button>
+        <button data-go="music"><i>MK-III</i>Musician</button>
+        <button data-go="peace"><i>MK-IV</i>Peace</button>
+        <button data-go="author"><i>MK-V</i>Author</button>
+      </div>
+      <div class="p-cta">
+        <a class="btn gold" href="recruiter.html">Open recruiter view</a>
+        <a class="btn" href="mailto:rahultirmale@gmail.com">rahultirmale@gmail.com</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ COMMAND BAR ============ -->
+<div class="cmd" id="cmd" role="dialog" aria-modal="true" aria-label="Command bar" hidden>
+  <div class="cmd-box">
+    <div class="cmd-input"><span>›</span><input id="cmdInput" placeholder="Type a command… try “guitar”, “1B”, “hire”" autocomplete="off" spellcheck="false"></div>
+    <ul id="cmdList" role="listbox"></ul>
+  </div>
+</div>
+
+<a class="recruiter-fab" href="recruiter.html">Recruiter mode →</a>
+
+<script src="assets/projects.js"></script>
+<script src="assets/hud.js"></script>
+</body>
+</html>
