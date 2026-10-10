@@ -64,6 +64,16 @@
     width: 34px; height: 34px; border-radius: 50%; cursor: pointer; font-size: 15px;
   }
   @media (max-width: 720px) { .nav-links .hide-sm { display: none; } }
+  .nav-links a.mode-btn {
+    display: inline-flex; align-items: center; gap: 8px; padding: 7px 14px; border-radius: 999px;
+    background: #04070c; color: #e8f6ff; font-size: 14px; font-weight: 500; white-space: nowrap;
+    box-shadow: 0 0 0 1px rgba(94, 231, 255, .45), 0 0 18px rgba(94, 231, 255, .25);
+    transition: box-shadow .2s ease, transform .15s ease;
+  }
+  .nav-links a.mode-btn:hover { color: #fff; transform: translateY(-1px); box-shadow: 0 0 0 1px #5ee7ff, 0 0 24px rgba(94, 231, 255, .45); }
+  .mode-dot { width: 8px; height: 8px; border-radius: 50%; background: #5ee7ff; box-shadow: 0 0 8px #5ee7ff; }
+  @media (max-width: 720px) { .nav-links { gap: 10px; } }
+  @media (max-width: 420px) { .nav-links .hide-xs, .hide-xs { display: none; } .brand { font-size: 17px; white-space: nowrap; } }
 
   .btn {
     display: inline-flex; align-items: center; gap: 8px;
@@ -250,8 +260,8 @@
       <a class="hide-sm" href="#lab">Lab</a>
       <a class="hide-sm" href="#writing">Writing</a>
       <a class="hide-sm" href="#book">Book</a>
-      <a class="hide-sm" href="index.html">Interactive site ✦</a>
-      <a class="btn btn-primary btn-sm" href="#contact">Contact</a>
+      <a class="mode-btn" href="index.html" title="Back to the interactive Rahul OS experience"><span class="mode-dot"></span>Interactive<span class="hide-xs">&nbsp;mode</span></a>
+      <a class="btn btn-primary btn-sm hide-xs" href="#contact">Contact</a>
       <button class="theme-btn" id="themeBtn" aria-label="Toggle dark mode">◐</button>
     </div>
   </div>
