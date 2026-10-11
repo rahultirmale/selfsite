@@ -52,7 +52,7 @@
   /* ================= BOOT ================= */
   const boot = $('#boot');
   const bootLines = [
-    ['Initializing RAHUL.OS v5.0', ''],
+    ['Powering up', ''],
     ['Product systems · 30M+ users', 'ONLINE'],
     ['AI consulting core', 'ONLINE'],
     ['Author module · Agentic Product Playbook', 'LOADED'],
