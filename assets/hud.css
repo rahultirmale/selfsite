@@ -91,7 +91,8 @@ kbd {
   padding: 16px 24px;
   font-family: var(--hud);
 }
-.logo { display: flex; align-items: center; gap: 10px; text-decoration: none; font-weight: 600; letter-spacing: .14em; font-size: 15px; }
+.logo { display: flex; align-items: center; gap: 10px; text-decoration: none; font-weight: 600; letter-spacing: .2em; font-size: 13px; color: var(--ink-2); transition: color .2s; }
+.logo:hover { color: var(--ink); }
 .logo b { color: var(--gold); font-weight: 600; }
 .logo-mark { width: 18px; height: 18px; border: 2px solid var(--c1); border-radius: 50%; box-shadow: 0 0 10px var(--c1), inset 0 0 6px var(--c1); }
 .hud-status { font-size: 12px; letter-spacing: .16em; color: var(--ink-2); display: flex; align-items: center; gap: 10px; }
