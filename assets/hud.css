@@ -352,7 +352,8 @@ body.panel-open #hub { opacity: .18; transform: scale(1.12); filter: blur(4px); 
 .scan-run { margin-top: 22px; }
 .scan-console { margin-top: 18px; font: 500 13px/1.9 var(--hud); color: var(--ink-2); letter-spacing: .04em; }
 .scan-console div::before { content: "› "; color: var(--c1); }
-.scan-console .bar { height: 2px; background: var(--c1-dim); margin: 6px 0; }
+.scan-console .bar { height: 2px; background: var(--c1-dim); margin: 10px 0 4px; overflow: hidden; }
+.scan-console .bar::before { content: none; }
 .scan-console .bar i { display: block; height: 100%; width: 0; background: var(--c1); box-shadow: 0 0 10px var(--c1); transition: width 1.6s linear; }
 .scan-result { margin-top: 18px; animation: fadeUp .4s ease both; }
 .scan-result h4 { font: 600 15px var(--hud); letter-spacing: .1em; color: var(--gold); text-transform: uppercase; margin-bottom: 12px; }
