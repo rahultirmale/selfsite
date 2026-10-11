@@ -268,7 +268,7 @@
   function showSuit(i) {
     const s = suits[i];
     $$('.suit').forEach((b, j) => b.classList.toggle('active', j === i));
-    $('#suitDetail').innerHTML = `<h4>${s.org}<small>${s.role} · ${s.when}</small></h4><p>${s.text}</p><div class="cap">Capability unlocked · ${s.cap}</div>`;
+    $('#suitDetail').innerHTML = `<h4>${s.org}<small>${s.role} · ${s.when}</small></h4><p>${s.text}</p><div class="cap">Capability added · ${s.cap}</div>`;
     $('#suitDetail').style.animation = 'none'; void $('#suitDetail').offsetWidth; $('#suitDetail').style.animation = '';
   }
   $$('.suit').forEach((b, i) => b.addEventListener('click', () => { showSuit(i); blip(500 + i * 90, .06, .04); }));

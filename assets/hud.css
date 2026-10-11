@@ -293,9 +293,10 @@ body.panel-open #hub { opacity: .18; transform: scale(1.12); filter: blur(4px); 
 }
 
 /* Readouts */
-.readouts { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; margin-top: 28px; }
+.readouts { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; }
 .readout { border: 1px solid var(--line); padding: 16px; position: relative; background: rgba(94, 231, 255, .03); }
 .readout::before { content: ""; position: absolute; left: 0; top: 0; width: 22px; height: 2px; background: var(--gold); }
+.readout em { display: block; font: 600 11px var(--hud); letter-spacing: .14em; text-transform: uppercase; color: var(--gold); font-style: normal; margin-bottom: 10px; }
 .readout b { display: block; font: 600 clamp(28px, 3.6vw, 40px)/1 var(--hud); color: var(--c1); text-shadow: 0 0 18px var(--c1-dim); }
 .readout span { display: block; margin-top: 8px; font-size: 13px; color: var(--ink-2); }
 @media (max-width: 760px) { .readouts { grid-template-columns: 1fr 1fr; } }
