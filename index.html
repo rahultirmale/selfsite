@@ -312,19 +312,90 @@
       <div><span class="p-code">MK-IV</span><h2 id="h-peace">Peace</h2></div>
       <button class="close" data-close aria-label="Close">ESC ✕</button>
     </header>
-    <div class="panel-body center">
-      <p class="p-lede">The suit runs hot, but the person inside doesn't have to. Calm is a leadership skill, and it's how I make good calls under pressure.</p>
-      <div class="breath" id="breath">
-        <div class="breath-circle"><span id="breathText">Ready</span></div>
+    <div class="panel-body">
+      <p class="p-lede">The suit runs hot, but the person inside doesn't have to. Here are the small practices I come back to. Pick one, take two minutes, and leave a little lighter.</p>
+
+      <div class="peace-tabs" role="tablist">
+        <button role="tab" aria-selected="true" data-pt="breathe">🌬 Breathe</button>
+        <button role="tab" aria-selected="false" data-pt="body">🧘 Calm your body</button>
+        <button role="tab" aria-selected="false" data-pt="gratitude">🙏 Gratitude</button>
+        <button role="tab" aria-selected="false" data-pt="mantras">ॐ Mantras</button>
+        <button role="tab" aria-selected="false" data-pt="ground">🌱 Ground yourself</button>
       </div>
-      <div class="p-cta center">
-        <button class="btn gold" id="breathBtn">Take three breaths with me</button>
-        <button class="btn" id="powerBtn">Power down the suit</button>
+
+      <!-- BREATHE -->
+      <div class="pt" data-pt="breathe">
+        <div class="chips-row" id="breathPatterns">
+          <button class="on" data-p="calm">Calm · 4-6</button>
+          <button data-p="box">Box · 4-4-4-4</button>
+          <button data-p="relax">Sleep · 4-7-8</button>
+        </div>
+        <p class="pt-hint" id="breathHint">A longer exhale tells your nervous system it's safe. Good for any stressful moment.</p>
+        <div class="breath"><div class="breath-circle" id="breathCircle"><span id="breathText">Ready</span><small id="breathCount"></small></div></div>
+        <div class="p-cta center">
+          <button class="btn gold" id="breathBtn">Start · 5 rounds</button>
+          <button class="btn" id="toneBtn">♪ Calm tone: off</button>
+        </div>
       </div>
-      <div class="values">
-        <div><b>Steady over loud</b><span>Calm teams ship better decisions.</span></div>
-        <div><b>Space to think</b><span>Good ideas need quiet, like good music.</span></div>
-        <div><b>Kindness scales</b><span>The best products respect people's time and attention.</span></div>
+
+      <!-- BODY -->
+      <div class="pt" data-pt="body" hidden>
+        <p class="pt-hint">A two-minute body scan. Sit comfortably, soften your gaze, and follow each cue.</p>
+        <div class="scan-card">
+          <div class="scan-step-n" id="bodyN">Step 0 / 8</div>
+          <div class="scan-cue" id="bodyCue">Press start when you're ready.</div>
+          <div class="scan-prog"><i id="bodyProg"></i></div>
+        </div>
+        <div class="p-cta center">
+          <button class="btn gold" id="bodyBtn">Start body scan</button>
+          <button class="btn" id="bodyNext">Next cue →</button>
+        </div>
+      </div>
+
+      <!-- GRATITUDE -->
+      <div class="pt" data-pt="gratitude" hidden>
+        <div class="mantra-big"><span id="gratText"></span></div>
+        <div class="p-cta center"><button class="btn" id="gratNext">Another gratitude mantra ↻</button></div>
+        <h3 class="sub">Three good things <small>Kept only on this device</small></h3>
+        <div class="journal">
+          <label><span>1</span><input data-j="0" placeholder="Today I'm grateful for…" maxlength="140"></label>
+          <label><span>2</span><input data-j="1" placeholder="Someone who made my day better…" maxlength="140"></label>
+          <label><span>3</span><input data-j="2" placeholder="A small thing I usually overlook…" maxlength="140"></label>
+        </div>
+        <p class="pt-hint" id="journalNote">Writing down three good things a day is one of the simplest habits for a happier mind.</p>
+      </div>
+
+      <!-- MANTRAS -->
+      <div class="pt" data-pt="mantras" hidden>
+        <div class="mantra-card">
+          <div class="m-dev" id="mDev"></div>
+          <div class="m-tr" id="mTr"></div>
+          <div class="m-mean" id="mMean"></div>
+          <div class="m-nav"><button id="mPrev" aria-label="Previous mantra">←</button><span id="mIdx"></span><button id="mNext" aria-label="Next mantra">→</button></div>
+        </div>
+        <div class="mala">
+          <button class="mala-ring" id="malaBtn" aria-label="Count one repetition">
+            <svg viewBox="0 0 120 120" aria-hidden="true"><circle cx="60" cy="60" r="52" class="mala-track"/><circle cx="60" cy="60" r="52" class="mala-fill" id="malaFill"/></svg>
+            <span><b id="malaCount">0</b><small>/ 108</small></span>
+          </button>
+          <div class="mala-text"><b>Chant along</b><span>Repeat the mantra softly. Tap the ring (or press space) once for each repetition. A traditional mala has 108 beads.</span><button class="link-btn" id="malaReset">Reset</button></div>
+        </div>
+      </div>
+
+      <!-- GROUND -->
+      <div class="pt" data-pt="ground" hidden>
+        <p class="pt-hint">The 5-4-3-2-1 technique pulls an anxious mind back into the present. Tap a dot each time you notice something.</p>
+        <div class="ground" id="ground"></div>
+        <div class="p-cta center"><button class="btn" id="groundReset">Start again</button></div>
+      </div>
+
+      <div class="peace-foot">
+        <div class="values">
+          <div><b>Steady over loud</b><span>Calm teams make better decisions.</span></div>
+          <div><b>Space to think</b><span>Good ideas need quiet, like good music.</span></div>
+          <div><b>Kindness scales</b><span>The best products respect people's time and attention.</span></div>
+        </div>
+        <div class="p-cta center"><button class="btn" id="powerBtn">Power down the suit</button></div>
       </div>
     </div>
   </div>
@@ -360,11 +431,18 @@
       </div>
 
       <h3 class="sub">Transmissions <small>Recent writing</small></h3>
-      <div class="posts">
-        <article><i>BUILD vs BUY vs RENT</i><b>Closed APIs are perfect for MVPs and terrible for scale</b><p>Why I hosted an open-weight LLM, and what it taught me about AI unit economics.</p></article>
-        <article><i>LEARNING BY SHIPPING</i><b>4 micro-SaaS launches taught me more than any AI course</b><p>Payments, auth and integrations: the blockers are where you learn.</p></article>
-        <article><i>AI FOR PMs</i><b>Agents that save hours of PM busywork</b><p>Telegram + n8n + RAG agents for backlogs, documents and status emails.</p></article>
+      <div class="posts" id="posts">
+        <button data-post="0"><i>BUILD vs BUY vs RENT</i><b>Closed APIs are perfect for MVPs and terrible for scale</b><p>Why I hosted an open-weight LLM, and what it taught me about AI unit economics.</p><em>Read post →</em></button>
+        <button data-post="1"><i>LEARNING BY SHIPPING</i><b>4 micro-SaaS launches taught me more than any AI course</b><p>Payments, auth and integrations: the blockers are where you learn.</p><em>Read post →</em></button>
+        <button data-post="2"><i>AI FOR PMs</i><b>Agents that save hours of PM busywork</b><p>Telegram + n8n + RAG agents for backlogs, documents and status emails.</p><em>Read post →</em></button>
       </div>
+      <article class="reader" id="reader" hidden>
+        <button class="link-btn" id="readerBack">← All posts</button>
+        <i id="readerKicker"></i>
+        <h3 id="readerTitle"></h3>
+        <div class="reader-body" id="readerBody"></div>
+        <div class="p-cta"><a class="btn gold" id="readerLink" target="_blank" rel="noopener">View on LinkedIn ↗</a></div>
+      </article>
     </div>
   </div>
 </section>

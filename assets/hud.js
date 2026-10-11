@@ -494,24 +494,307 @@
     document.body.classList.toggle('peace', on);
     c1 = cssVar('--c1');
     powerBtn.textContent = on ? 'Power the suit back up' : 'Power down the suit';
-    $('#hudStatus').innerHTML = on ? '<span class="pulse"></span>PEACE PROTOCOL ACTIVE' : '<span class="pulse"></span>ALL SYSTEMS NOMINAL';
+    $('#hudStatus').innerHTML = on ? '<span class="pulse"></span>PEACE MODE ACTIVE' : '<span class="pulse"></span>ALL SYSTEMS NOMINAL';
     blip(on ? 330 : 660, .3, .04);
   }
   powerBtn.addEventListener('click', () => setPeace(!document.body.classList.contains('peace')));
 
-  let breathing = false;
+  let peaceTab = 'breathe';
+  $$('.peace-tabs button').forEach(b => b.addEventListener('click', () => {
+    peaceTab = b.dataset.pt;
+    $$('.peace-tabs button').forEach(x => x.setAttribute('aria-selected', x === b));
+    $$('#panel-peace .pt').forEach(p => p.hidden = p.dataset.pt !== peaceTab);
+    blip(520, .04, .03);
+  }));
+
+  const wait = ms => new Promise(r => setTimeout(r, ms));
+
+  // --- Breathe
+  const PATTERNS = {
+    calm: { steps: [['Breathe in', 4, 'in'], ['Breathe out', 6, 'out']], hint: "A longer exhale tells your nervous system it's safe. Good for any stressful moment." },
+    box: { steps: [['Breathe in', 4, 'in'], ['Hold', 4, 'hold'], ['Breathe out', 4, 'out'], ['Hold', 4, 'hold-out']], hint: 'Used by pilots and athletes to stay sharp under pressure. Equal counts, steady rhythm.' },
+    relax: { steps: [['Breathe in', 4, 'in'], ['Hold', 7, 'hold'], ['Breathe out', 8, 'out']], hint: 'The 4-7-8 breath slows everything down. Try it before sleep or after a long day.' },
+  };
+  let pattern = 'calm', breathRun = 0;
+  $('#breathPatterns').addEventListener('click', e => {
+    const b = e.target.closest('button'); if (!b) return;
+    pattern = b.dataset.p;
+    $$('#breathPatterns button').forEach(x => x.classList.toggle('on', x === b));
+    $('#breathHint').textContent = PATTERNS[pattern].hint;
+    stopBreath();
+  });
+  function stopBreath() {
+    breathRun++;
+    const c = $('#breathCircle');
+    c.className = 'breath-circle'; c.style.transitionDuration = '';
+    $('#breathText').textContent = 'Ready'; $('#breathCount').textContent = '';
+    $('#breathBtn').textContent = 'Start · 5 rounds';
+  }
   $('#breathBtn').addEventListener('click', async () => {
-    if (breathing) return;
-    breathing = true;
+    if ($('#breathBtn').textContent.startsWith('Stop')) return stopBreath();
+    const run = ++breathRun, c = $('#breathCircle'), t = $('#breathText'), n = $('#breathCount');
+    $('#breathBtn').textContent = 'Stop';
     if (!document.body.classList.contains('peace')) setPeace(true);
-    const c = $('.breath-circle'), t = $('#breathText');
-    const wait = ms => new Promise(r => setTimeout(r, ms));
-    for (let i = 0; i < 3; i++) {
-      c.className = 'breath-circle in'; t.textContent = 'Breathe in'; await wait(4000);
-      t.textContent = 'Hold'; await wait(3000);
-      c.className = 'breath-circle out'; t.textContent = 'Breathe out'; await wait(6000);
+    for (let r = 1; r <= 5; r++) {
+      for (const [label, secs, cls] of PATTERNS[pattern].steps) {
+        if (run !== breathRun) return;
+        c.style.transitionDuration = secs + 's';
+        c.className = 'breath-circle ' + cls;
+        t.textContent = label;
+        for (let k = secs; k > 0; k--) {
+          if (run !== breathRun) return;
+          n.textContent = `${k} · round ${r}/5`;
+          await wait(1000);
+        }
+      }
     }
-    c.className = 'breath-circle'; t.textContent = 'Peace'; breathing = false;
+    if (run !== breathRun) return;
+    c.className = 'breath-circle'; c.style.transitionDuration = '';
+    t.textContent = 'Well done'; n.textContent = 'notice how you feel';
+    $('#breathBtn').textContent = 'Start · 5 rounds';
+  });
+
+  // soft ambient tone (explicit user action, independent of interface sounds)
+  let tone = null;
+  $('#toneBtn').addEventListener('click', () => {
+    if (tone) {
+      const t = tone; tone = null;
+      t.g.gain.setTargetAtTime(0, ctx.currentTime, .6);
+      setTimeout(() => t.oscs.forEach(o => o.stop()), 2500);
+      $('#toneBtn').textContent = '♪ Calm tone: off';
+      return;
+    }
+    if (!audio()) return;
+    const g = ctx.createGain(), lp = ctx.createBiquadFilter();
+    lp.type = 'lowpass'; lp.frequency.value = 700;
+    g.gain.value = 0; g.connect(lp).connect(master);
+    const oscs = [110, 164.81, 220.5, 277.18].map((f, i) => {
+      const o = ctx.createOscillator(), og = ctx.createGain(), lfo = ctx.createOscillator(), lg = ctx.createGain();
+      o.type = i % 2 ? 'triangle' : 'sine'; o.frequency.value = f;
+      og.gain.value = [.5, .25, .18, .1][i];
+      lfo.frequency.value = .05 + i * .03; lg.gain.value = og.gain.value * .5;
+      lfo.connect(lg).connect(og.gain);
+      o.connect(og).connect(g); o.start(); lfo.start();
+      return { stop() { o.stop(); lfo.stop(); } };
+    });
+    g.gain.setTargetAtTime(.12, ctx.currentTime, 1.2);
+    tone = { g, oscs };
+    $('#toneBtn').textContent = '♪ Calm tone: on';
+  });
+
+  // --- Calm your body (guided body scan)
+  const BODY = [
+    'Close your eyes or soften your gaze. Let your breath find its own pace.',
+    'Relax your forehead. Let the space between your eyebrows smooth out.',
+    'Unclench your jaw. Let your tongue rest and your teeth part slightly.',
+    'Drop your shoulders away from your ears. Let them feel heavy.',
+    'Let your hands go loose. Feel any warmth or tingling in your palms.',
+    'Notice your belly rise and fall. No need to change anything.',
+    'Feel the weight of your legs and the ground beneath your feet.',
+    'Take one slow, deep breath. You are here, and this moment is enough.',
+  ];
+  let bodyRun = 0, bodyIdx = -1;
+  function showBody(i) {
+    bodyIdx = i;
+    $('#bodyN').textContent = `Step ${i + 1} / ${BODY.length}`;
+    const cue = $('#bodyCue'); cue.style.opacity = 0;
+    setTimeout(() => { cue.textContent = BODY[i]; cue.style.opacity = 1; }, 250);
+  }
+  async function runBody(from) {
+    const run = ++bodyRun;
+    $('#bodyBtn').textContent = 'Pause';
+    for (let i = from; i < BODY.length; i++) {
+      showBody(i);
+      const bar = $('#bodyProg');
+      bar.style.transition = 'none'; bar.style.width = '0';
+      void bar.offsetWidth;
+      bar.style.transition = 'width 14s linear'; bar.style.width = '100%';
+      for (let k = 0; k < 140; k++) { if (run !== bodyRun) return; await wait(100); }
+    }
+    if (run !== bodyRun) return;
+    $('#bodyN').textContent = 'Complete';
+    $('#bodyCue').textContent = 'Gently open your eyes. Carry this calm into your next task.';
+    $('#bodyBtn').textContent = 'Start again'; bodyIdx = -1;
+  }
+  $('#bodyBtn').addEventListener('click', () => {
+    if ($('#bodyBtn').textContent === 'Pause') {
+      bodyRun++; $('#bodyBtn').textContent = 'Resume';
+      const bar = $('#bodyProg'); bar.style.width = getComputedStyle(bar).width; bar.style.transition = 'none';
+      return;
+    }
+    runBody(bodyIdx < 0 ? 0 : bodyIdx);
+  });
+  $('#bodyNext').addEventListener('click', () => {
+    const next = bodyIdx + 1;
+    if (next >= BODY.length) return;
+    runBody(next);
+  });
+
+  // --- Gratitude
+  const GRAT = [
+    'I am grateful for this breath, and the one after it.',
+    'Thank you to the people who quietly make my life easier.',
+    'I have enough, I do enough, I am enough.',
+    'Today I notice the small good things I usually rush past.',
+    'I am grateful for my body, which carries me through every day.',
+    'Every challenge I faced made me who I am today. Thank you.',
+    'Grateful for a warm meal, a safe place and people who care.',
+    'What I have right now was once something I hoped for.',
+    'Thank you, life, for the lessons and the people who taught them.',
+    'I welcome today with an open heart and a thankful mind.',
+  ];
+  let gi = Math.floor(Math.random() * GRAT.length);
+  function showGrat() { const el = $('#gratText'); el.textContent = GRAT[gi]; el.style.animation = 'none'; void el.offsetWidth; el.style.animation = ''; }
+  showGrat();
+  $('#gratNext').addEventListener('click', () => { gi = (gi + 1) % GRAT.length; showGrat(); blip(700, .05, .03); });
+  const today = new Date().toISOString().slice(0, 10);
+  let journal = {};
+  try { journal = JSON.parse(store.get('peace-journal') || '{}'); } catch (e) { journal = {}; }
+  if (journal.date !== today || !Array.isArray(journal.items)) journal = { date: today, items: ['', '', ''] };
+  $$('.journal input').forEach(inp => {
+    const i = +inp.dataset.j;
+    inp.value = journal.items[i] || '';
+    inp.classList.toggle('done', !!inp.value.trim());
+    inp.addEventListener('input', () => {
+      journal.items[i] = inp.value;
+      inp.classList.toggle('done', !!inp.value.trim());
+      store.set('peace-journal', JSON.stringify(journal));
+      if (journal.items.every(x => x.trim())) $('#journalNote').textContent = 'Three good things noted. That is a good day, whatever else happened. 🙏';
+    });
+  });
+
+  // --- Mantras + mala counter
+  const MANTRAS = [
+    { dev: 'ॐ शान्तिः शान्तिः शान्तिः', tr: 'Om Shanti Shanti Shanti', mean: 'Peace in the body, peace in the mind, peace in the world around me.' },
+    { dev: 'लोकाः समस्ताः सुखिनो भवन्तु', tr: 'Lokah Samastah Sukhino Bhavantu', mean: 'May all beings everywhere be happy and free.' },
+    { dev: 'सर्वे भवन्तु सुखिनः', tr: 'Sarve Bhavantu Sukhinah', mean: 'May everyone be happy. May everyone be free from illness and suffering.' },
+    { dev: 'सोऽहम्', tr: 'So Hum', mean: 'A breath mantra: silently say "So" as you breathe in and "Hum" as you breathe out.' },
+    { dev: 'ॐ मणि पद्मे हूँ', tr: 'Om Mani Padme Hum', mean: 'A mantra of compassion: may kindness grow in me and flow to others.' },
+    { dev: 'This too shall pass.', tr: 'Calm', mean: 'Good moments and hard ones are both temporary. Hold them lightly.' },
+    { dev: 'I am calm. I am here.', tr: 'Presence', mean: 'Nothing to fix right now. Just this breath, just this moment.' },
+    { dev: 'One step at a time.', tr: 'Focus', mean: 'I only need to take the next small step, not solve everything at once.' },
+  ];
+  let mi = 0;
+  function showMantra() {
+    const m = MANTRAS[mi];
+    $('#mDev').textContent = m.dev; $('#mTr').textContent = m.tr; $('#mMean').textContent = m.mean;
+    $('#mIdx').textContent = `${mi + 1} / ${MANTRAS.length}`;
+  }
+  showMantra();
+  $('#mPrev').addEventListener('click', () => { mi = (mi - 1 + MANTRAS.length) % MANTRAS.length; showMantra(); });
+  $('#mNext').addEventListener('click', () => { mi = (mi + 1) % MANTRAS.length; showMantra(); });
+  let mala = 0;
+  const CIRC = 2 * Math.PI * 52;
+  function drawMala() {
+    $('#malaCount').textContent = mala;
+    const inRound = mala === 0 ? 0 : (mala % 108 || 108);
+    $('#malaFill').style.strokeDashoffset = CIRC * (1 - inRound / 108);
+  }
+  function countMala() {
+    mala++;
+    drawMala();
+    if ((uiSound || tone) && audio() && ctx.state === 'running') {
+      const o = ctx.createOscillator(), g = ctx.createGain();
+      o.type = 'sine'; o.frequency.value = mala % 108 === 0 ? 528 : 396;
+      g.gain.setValueAtTime(.06, ctx.currentTime); g.gain.exponentialRampToValueAtTime(.0001, ctx.currentTime + 1.2);
+      o.connect(g).connect(master); o.start(); o.stop(ctx.currentTime + 1.3);
+    }
+    if (mala % 108 === 0) $('.mala-text b').textContent = `${mala / 108} full mala complete 🙏`;
+  }
+  $('#malaBtn').addEventListener('click', countMala);
+  $('#malaReset').addEventListener('click', () => { mala = 0; drawMala(); $('.mala-text b').textContent = 'Chant along'; });
+  addEventListener('keydown', e => {
+    if (current === 'peace' && peaceTab === 'mantras' && e.key === ' ' && !/INPUT|BUTTON/.test(e.target.tagName)) { e.preventDefault(); countMala(); }
+  });
+
+  // --- Ground yourself (5-4-3-2-1)
+  const GROUND = [
+    [5, 'Things you can see', 'Look around slowly. Name them in your head.'],
+    [4, 'Things you can touch', 'Your chair, your clothes, the floor under your feet.'],
+    [3, 'Things you can hear', 'Near and far. The hum of a fan, a bird, your breath.'],
+    [2, 'Things you can smell', 'Or two scents you like, if nothing stands out.'],
+    [1, 'Thing you can taste', 'Or take a sip of water and notice it.'],
+  ];
+  function buildGround() {
+    $('#ground').innerHTML = GROUND.map(([n, t, s], r) =>
+      `<div class="g-row${r === 0 ? ' active' : ''}" data-r="${r}"><div><b>${n} ${t}</b><span>${s}</span></div>
+        <div class="g-dots">${Array.from({ length: n }, () => `<button aria-label="Noticed one" ${r ? 'disabled' : ''}></button>`).join('')}</div></div>`
+    ).join('');
+  }
+  buildGround();
+  $('#ground').addEventListener('click', e => {
+    const b = e.target.closest('.g-dots button'); if (!b || b.disabled || b.classList.contains('on')) return;
+    b.classList.add('on'); blip(600, .04, .03);
+    const row = b.closest('.g-row');
+    if ($$('button', row).every(x => x.classList.contains('on'))) {
+      row.classList.remove('active'); row.classList.add('done');
+      const next = row.nextElementSibling;
+      if (next && next.classList.contains('g-row')) {
+        next.classList.add('active'); $$('button', next).forEach(x => x.disabled = false);
+      } else {
+        $('#ground').insertAdjacentHTML('beforeend', '<div class="g-final">You are here, in this moment. Well done. 🌱</div>');
+      }
+    }
+  });
+  $('#groundReset').addEventListener('click', buildGround);
+
+  /* ================= POSTS ================= */
+  // Swap url for each post's direct LinkedIn link when available.
+  const LINKEDIN = 'https://www.linkedin.com/in/rahultirmale/recent-activity/all/';
+  const POSTS = [
+    { kicker: 'BUILD vs BUY vs RENT', title: 'Closed APIs are perfect for MVPs and terrible for scale', url: LINKEDIN, body: `
+      <p>Here's what nobody tells you about ChatGPT APIs: they're perfect for MVPs and terrible for scale.</p>
+      <p>Last week I finally did what I'd been putting off: I hosted an LLM locally. Honestly, I should have done it months ago.</p>
+      <p>Here's the clarity I wish I'd had earlier. ChatGPT and Claude aren't really "open". You can't see the weights (the numbers behind the intelligence), fine-tune them or host them. You're renting compute, and the bill grows as you scale.</p>
+      <p>Llama 3, Mistral, Gemma and Qwen are fully open: download, modify, deploy anywhere. OpenAI has also released two open-weight models.</p>
+      <p><b>Two ways to do it</b></p>
+      <ul>
+        <li><b>💻 Local:</b> if you have an RTX 40/50-series GPU, you're set. If not, a 4B model still impresses, though your PC will struggle. Install Ollama, grab a model from Ollama or Hugging Face, and you're running your own AI in 10 minutes.</li>
+        <li><b>☁️ Cloud, for production:</b> rent an A10 or L4 GPU on AWS or Azure. Docker plus vLLM gives you your own API server with OpenAI-compatible endpoints, and you control everything.</li>
+      </ul>
+      <p><b>What changes when you do this</b></p>
+      <ul>
+        <li>You finally understand what you're paying for and how pricing works</li>
+        <li>You see why fine-tuning is not the same as prompt engineering</li>
+        <li>You control your data, with no third-party APIs</li>
+        <li>You make better build vs. buy vs. rent decisions</li>
+      </ul>` },
+    { kicker: 'LEARNING BY SHIPPING', title: '4 micro-SaaS launches taught me more than any AI course', url: LINKEDIN, body: `
+      <p>Over a long weekend I shipped 4 micro-SaaS experiments. Here's the first one: <b>AppReviewIntelligence.com</b>.</p>
+      <p><b>What it does:</b> compare any two apps and turn scattered user reviews into product signals you can act on, with an insightful side-by-side comparison.</p>
+      <p><b>How it works:</b> n8n triggers a scraper, pipes the raw reviews to an insights agent, and stores everything in Supabase.</p>
+      <p><b>What's built in</b></p>
+      <ul>
+        <li>Google Sign-In for seamless onboarding</li>
+        <li>Payments. PayPal was painful, Stripe doesn't work in India, and Razorpay was the smoothest ever 🙌</li>
+      </ul>
+      <p><b>The real takeaway:</b> the best way to learn is to build. Every integration, every blocker, every "this should have worked but didn't" moment is the real classroom.</p>
+      <p>The barrier to building today is almost zero. The best time to start is now.</p>
+      <p>Credit to Greg Isenberg for inspiring the push. What are your key learnings from vibe coding? And has anyone had success with international payments on AI platforms, apart from PayPal?</p>` },
+    { kicker: 'AI FOR PMs', title: 'AI agents in n8n that save hours, and a few brain cells', url: LINKEDIN, body: `
+      <p>Over the weekend I explored building AI agents that simplify PM life, using Telegram, n8n, OpenAI, Google Sheets and Pinecone. Here's what I ended up with 👇</p>
+      <ul>
+        <li><b>Plan a backlog or task list via Telegram.</b> Send a message like "Need to ship feature X, medium complexity". The AI calculates deadlines for UX, UI, dev and QA and logs everything neatly in Google Sheets. (You still need to define the logic; AI isn't your PM yet.) Super handy for answering "Will this ship by June?"</li>
+        <li><b>Chat with documents (RAG).</b> Upload your chunky doc, embed it in Pinecone, and ask anything via chat for context-aware answers. It turns that 40-page doc into a chatbot that doesn't ghost you.</li>
+        <li><b>Send email updates from Sheets.</b> It reads task statuses, GPT drafts polite (but firm) update emails, and Gmail sends them. Great for nudging your team. Or yourself. Repeatedly. Gently.</li>
+        <li><b>Query the task list via Telegram.</b> Ask "What's due this week?" and get a real-time answer straight from your Sheet. No dashboards, no tab-switching.</li>
+      </ul>
+      <p>The real power of these agents will show when organisations start adopting private instances. If you're building or exploring AI agent use cases, I'm happy to share templates or jam on ideas.</p>` },
+  ];
+  $('#posts').addEventListener('click', e => {
+    const b = e.target.closest('[data-post]'); if (!b) return;
+    const p = POSTS[+b.dataset.post];
+    $('#readerKicker').textContent = p.kicker;
+    $('#readerTitle').textContent = p.title;
+    $('#readerBody').innerHTML = p.body;
+    $('#readerLink').href = p.url;
+    $('#posts').hidden = true; $('#reader').hidden = false;
+    $('#reader').scrollIntoView({ behavior: reduced ? 'auto' : 'smooth', block: 'start' });
+    blip(600, .05, .03);
+  });
+  $('#readerBack').addEventListener('click', () => {
+    $('#reader').hidden = true; $('#posts').hidden = false;
+    $('#posts').scrollIntoView({ behavior: reduced ? 'auto' : 'smooth', block: 'center' });
   });
 
   /* ================= BOOK ================= */
@@ -532,8 +815,8 @@
     { t: "Builder's lab: everything I've shipped", k: 'projects lab side built shipped vibe code apps portfolio saas', run: () => { go('consulting'); setTimeout(() => $('#lab').scrollIntoView({ behavior: 'smooth' }), 400); } },
     { t: 'Run AI opportunity scan', k: 'ai consulting consult scan advisory hire help', run: () => go('consulting') },
     { t: 'Play the guitar', k: 'guitar music musician play song solo hotel california', run: () => go('music') },
-    { t: 'Enter peace mode', k: 'peace calm breathe relax power down', run: () => { go('peace'); } },
-    { t: 'The Agentic Product Playbook', k: 'book author writing read amazon playbook posts', run: () => go('author') },
+    { t: 'Peace: breathe, mantras, gratitude', k: 'peace calm breathe relax power down mantra gratitude meditate body scan anxiety stress', run: () => { go('peace'); } },
+    { t: 'The Agentic Product Playbook & posts', k: 'book author writing read amazon playbook posts blog linkedin article', run: () => go('author') },
     { t: 'Recruiter mode (one-page résumé)', k: 'recruiter resume cv hire one page simple', run: () => { location.href = 'recruiter.html'; } },
     { t: 'Download résumé (PDF)', k: 'resume cv pdf download', run: () => { const a = document.createElement('a'); a.href = 'resume.pdf'; a.download = ''; a.click(); } },
     { t: 'Email Rahul', k: 'email contact mail hire reach', run: () => { location.href = 'mailto:rahultirmale@gmail.com'; } },
