@@ -335,7 +335,10 @@ body.panel-open #hub { opacity: .18; transform: scale(1.12); filter: blur(4px); 
 .suit-detail h4 { font: 600 17px var(--hud); }
 .suit-detail h4 small { font: 400 13px var(--sans); color: var(--ink-3); margin-left: 8px; }
 .suit-detail p { color: var(--ink-2); font-size: 15px; margin-top: 6px; }
-.suit-detail .cap { font: 500 11px var(--hud); letter-spacing: .16em; color: var(--c1); margin-top: 10px; text-transform: uppercase; }
+.suit-detail ul { list-style: none; display: grid; gap: 8px; margin-top: 14px; }
+.suit-detail li { position: relative; padding-left: 18px; color: var(--ink-2); font-size: 14.5px; line-height: 1.55; }
+.suit-detail li::before { content: ""; position: absolute; left: 2px; top: .62em; width: 6px; height: 6px; border-radius: 50%; background: var(--c1); box-shadow: 0 0 6px var(--c1); }
+.suit-detail .cap { font: 500 11px var(--hud); letter-spacing: .16em; color: var(--c1); margin-top: 16px; text-transform: uppercase; }
 @media (max-width: 600px) { .suit i { width: 46px; height: 46px; font-size: 10px; } .armor::before { top: 23px; } .suit b { font-size: 11px; } }
 
 .awards { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 32px; }

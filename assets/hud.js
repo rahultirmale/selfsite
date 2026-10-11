@@ -254,21 +254,54 @@
   }));
 
   const suits = [
-    { org: 'John Deere', role: 'Graduate Engineer Trainee', when: '2014 – 2015', cap: 'Engineering core',
-      text: 'Built IoT machine-monitoring apps for intelligent tractor displays and GPS integration for autonomous tractors. Named "Star of the Sprint" twice.' },
+    { org: 'John Deere', role: 'Graduate Engineer Trainee', when: '2014 – 2015', cap: 'Engineering core · IoT',
+      text: 'Started as an engineer building software for connected farm machinery, which gave me a hands-on feel for hardware, data and real-world users.',
+      points: [
+        'Built the Machine Monitor and Work Monitor apps for intelligent tractor displays, tracking equipment performance analytics',
+        'Developed GPS integration for autonomous tractor systems',
+        'Named "Star of the Sprint" twice for standout sprint contributions',
+      ] },
     { org: 'Wipro Technologies', role: 'Product Manager · Way2Go', when: '2017 – 2018', cap: 'Product from zero',
-      text: 'Took a B2B travel SaaS from inception to launch on Azure. Added 50% more content through an OTA partnership, removed about 16 FTEs of operational overhead, and handled $10M a month in transactions.' },
+      text: 'My first product role after IIM Kozhikode. I owned Way2Go, a white-labelled B2B travel booking SaaS on Azure, from inception to launch.',
+      points: [
+        'Led full-cycle development from requirements to launch, working across engineering, design and business teams',
+        'Integrated a leading online travel agency as content partner, growing travel inventory on the platform by 50%',
+        'Redesigned booking, cancellation and refund workflows, removing about 16 FTEs of operational overhead',
+        'Streamlined billing and settlement between travel management companies, BSPs and low-cost carriers, handling $10M a month in transactions',
+      ] },
     { org: 'Accenture Strategy', role: 'Management Consultant · Digital Travel', when: '2018 – 2022', cap: 'Strategy & scale',
-      text: 'Led digital transformation for Malaysia Airlines and Qatar Airways: app and web strategy, loyalty transformation, and an 11% DAU lift.' },
+      text: 'Led digital transformation programmes for major airlines across Southeast Asia and the Middle East.',
+      points: [
+        'Owned product strategy for Malaysia Airlines\' B2C website and mobile apps, including BRDs, process flows and API specifications',
+        'Directed a major UI/UX overhaul across Android and iOS, lifting daily active users by 11%',
+        'Led a complete loyalty programme transformation to improve member engagement and retention',
+        'Built airport system integrations for real-time gate and flight alerts',
+        'Shaped Qatar Airways\' digital roadmap across customer touchpoints and developed thought leadership on NDC',
+      ] },
     { org: 'JSW One Platforms', role: 'Senior Product Manager · Salesforce Web + Mobile', when: '2022 – 2024', cap: 'Marketplace at $1B',
-      text: 'Built a B2B commerce platform for 30K+ MSMEs from scratch, owned its $1B GMV enablement, and set up a 9-member engineering and design team.' },
+      text: 'Built JSW Group\'s enterprise B2B commerce platform for MSMEs from the ground up, covering the journey from first enquiry to after-sales.',
+      points: [
+        'Owned $1B GMV enablement across sales, order management and post-sales journeys for 30K+ MSME buyers',
+        'Set up and scaled a 9-member engineering and design team for the Salesforce practice',
+        'Built credit and limit-management workflows that drove 15% month-over-month revenue growth',
+        'Launched omnichannel support (IVR, WhatsApp, email) that cut response time by 80% and lifted retention by 25%; Einstein bots cut first response time by 60%',
+        'Shipped a distributor portal for 10K retailers with WhatsApp automation, and an ML deal-closure model to help sales prioritise',
+      ] },
     { org: 'Vodafone Idea', role: 'GM – Product Manager · Vi App', when: '2024 – Present', cap: 'AI at 30M-user scale',
-      text: 'Lead the AI and prepaid portfolio with a 40-member team owning 70% of app revenue. Launched telecom\'s first LLM recharge agent (50K+ recharges a month) and won the Best Use of AI award.' },
+      text: 'I lead the AI and prepaid portfolio of the Vi app, India\'s third-largest telecom platform with 30M+ active users, through a strategic repositioning.',
+      points: [
+        'Launched the telecom industry\'s first LLM-powered recharge agent, now completing 50K+ recharges a month',
+        'Led an agentic payments use case in partnership with Razorpay, showcased at Global Fintech Fest',
+        'Lead a 40-member team responsible for 70% of the app\'s revenue across prepaid and partnerships',
+        'Started 4 gamification programmes, each adding 2–5M MAU; grew transactions 27% and lifted the store rating from 4.2 to 4.4',
+        'Won the Best Use of AI award for LLM-driven insights from app-store analytics, plus 2× Dream Team, 2× National CXX Hero and Innovation Catalyst awards',
+      ] },
   ];
   function showSuit(i) {
     const s = suits[i];
     $$('.suit').forEach((b, j) => b.classList.toggle('active', j === i));
-    $('#suitDetail').innerHTML = `<h4>${s.org}<small>${s.role} · ${s.when}</small></h4><p>${s.text}</p><div class="cap">Capability added · ${s.cap}</div>`;
+    $('#suitDetail').innerHTML = `<h4>${s.org}<small>${s.role} · ${s.when}</small></h4><p>${s.text}</p>
+      <ul>${s.points.map(p => `<li>${p}</li>`).join('')}</ul><div class="cap">Capability added · ${s.cap}</div>`;
     $('#suitDetail').style.animation = 'none'; void $('#suitDetail').offsetWidth; $('#suitDetail').style.animation = '';
   }
   $$('.suit').forEach((b, i) => b.addEventListener('click', () => { showSuit(i); blip(500 + i * 90, .06, .04); }));
